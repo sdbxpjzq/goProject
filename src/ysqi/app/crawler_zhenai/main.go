@@ -1,6 +1,7 @@
 package main
 
 import (
+	"ysqi/app/crawler_zhenai/config"
 	"ysqi/app/crawler_zhenai/engine"
 	"ysqi/app/crawler_zhenai/persist"
 	"ysqi/app/crawler_zhenai/scheduler"
@@ -9,7 +10,8 @@ import (
 
 func main() {
 
-	ItemChan, err := persist.ItemSaver("datint_profile_1")
+	// 并发版本
+	ItemChan, err := persist.ItemSaver(config.EsType)
 	if err != nil {
 		panic(err)
 	}

@@ -5,6 +5,7 @@ import (
 	"github.com/olivere/elastic"
 	"github.com/pkg/errors"
 	"log"
+	"ysqi/app/crawler_zhenai/config"
 	"ysqi/app/crawler_zhenai/engine"
 )
 
@@ -12,7 +13,7 @@ func ItemSaver(index string) (chan engine.Item, error) {
 	//关闭内网的sniff
 	client, err := elastic.NewClient(
 		elastic.SetSniff(false),
-		elastic.SetURL("http://47.244.160.71:9200"),
+		elastic.SetURL(config.EsSetUrl),
 	)
 	if err != nil {
 		return nil, err
@@ -26,7 +27,7 @@ func ItemSaver(index string) (chan engine.Item, error) {
 			item := <-out
 			itemCount++
 			log.Printf("Item Saver: Got %d  item : %v", itemCount, item)
-			err := save(client, index, item) //保存item
+			err := Save(client, index, item) //保存item
 			if err != nil {
 				panic(err)
 			}
@@ -37,7 +38,7 @@ func ItemSaver(index string) (chan engine.Item, error) {
 
 }
 
-func save(client *elastic.Client, index string, item engine.Item) error {
+func Save(client *elastic.Client, index string, item engine.Item) error {
 
 	if item.Type == "" {
 		return errors.New("must supply Type ..")

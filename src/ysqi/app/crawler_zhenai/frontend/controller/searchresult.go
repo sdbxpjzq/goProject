@@ -9,6 +9,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"ysqi/app/crawler_zhenai/config"
 	"ysqi/app/crawler_zhenai/engine"
 	"ysqi/app/crawler_zhenai/frontend/model"
 	"ysqi/app/crawler_zhenai/frontend/view"
@@ -43,7 +44,7 @@ func (h SearchResultHandler) ServeHTTP(w http.ResponseWriter, req *http.Request)
 func (h SearchResultHandler) getSearchResult(q string, from int) (model.SearchResult, error) {
 	var result model.SearchResult
 	result.Query = rewriteQueryString(q)
-	resp, err := h.client.Search("datint_profile_1").
+	resp, err := h.client.Search(config.EsType).
 		Query(elastic.NewQueryStringQuery(q)).
 		From(from).
 		Do(context.Background())
@@ -66,7 +67,7 @@ func (h SearchResultHandler) getSearchResult(q string, from int) (model.SearchRe
 func CreateSearchResultHandler(template string) SearchResultHandler {
 	client, err := elastic.NewClient(
 		elastic.SetSniff(false),
-		elastic.SetURL("http://47.244.160.71:9200"),
+		elastic.SetURL(config.EsSetUrl),
 	)
 	if err != nil {
 		panic(err)
