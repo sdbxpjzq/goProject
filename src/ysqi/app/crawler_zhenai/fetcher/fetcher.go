@@ -10,10 +10,10 @@ import (
 
 //"https://www.zhenai.com/zhenghun"
 
-var rateLimiter = time.Tick(time.Second)
+var rateLimiter = time.Tick(time.Millisecond * 100)
 
 func Fetcher(url string) ([]byte, error) {
-	//<-rateLimiter
+	<-rateLimiter
 	client := &http.Client{}
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {

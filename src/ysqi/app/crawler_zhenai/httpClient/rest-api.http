@@ -1,0 +1,22 @@
+
+#搜索全部记录
+GET http://47.244.160.71:9200/datint_profile_1/zhenai/_search
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json
+###
+
+#搜索关键词 q=
+GET http://47.244.160.71:9200/zongqi/golang_crawler_zhenai/_search?q=ruby2
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json
+###
+
+
+#展示数量  size
+GET http://47.244.160.71:9200/datint_profile/zhenai/_search?size=100
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json
+###

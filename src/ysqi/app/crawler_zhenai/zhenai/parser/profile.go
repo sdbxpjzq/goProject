@@ -4,26 +4,32 @@ import (
 	"github.com/bitly/go-simplejson"
 	"log"
 	"regexp"
+	"strconv"
 	"ysqi/app/crawler_zhenai/engine"
 	"ysqi/app/crawler_zhenai/model"
 )
 
 var re = regexp.MustCompile(`<script>window.__INITIAL_STATE__=(.+);\(function`)
 
-func ParseProfile(contents []byte, name string) engine.ParseResult {
+func ParseProfile(contents []byte, url string, name string) engine.ParseResult {
 	match := re.FindSubmatch(contents)
 	result := engine.ParseResult{}
 	if len(match) >= 2 {
 		json := match[1]
-		profile := parseJson(json)
+		profile, id := parseJson(json)
 		profile.Name = name
-		result.Items = append(result.Items, profile)
+		result.Items = append(result.Items, engine.Item{
+			Url:     url,
+			Type:    "zhenai",
+			Id:      id,
+			Payload: profile,
+		})
 	}
 	return result
 }
 
 //解析json数据
-func parseJson(json []byte) model.Profile {
+func parseJson(json []byte) (model.Profile, string) {
 	res, err := simplejson.NewJson(json)
 	if err != nil {
 		log.Println("解析json失败。。")
@@ -75,5 +81,12 @@ func parseJson(json []byte) model.Profile {
 
 	}
 
-	return profile
+	// 性别
+	gender, err := res.Get("objectInfo").Get("genderString").String()
+	profile.Gender = gender
+
+	//id
+	id, err := res.Get("objectInfo").Get("memberID").Int()
+
+	return profile, strconv.Itoa(id)
 }

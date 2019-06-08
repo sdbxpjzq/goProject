@@ -7,9 +7,12 @@ type Request struct {
 
 type ParseResult struct {
 	Requests []Request
-	Items    []interface{}
+	Items    []Item
 }
 
-func NilParse([]byte) ParseResult {
-	return ParseResult{}
+type Item struct {
+	Url     string //URL
+	Type    string //存储到ElasticSearch时的type
+	Id      string //用户Id
+	Payload interface{}
 }

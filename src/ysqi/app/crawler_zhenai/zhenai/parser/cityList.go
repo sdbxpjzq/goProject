@@ -17,7 +17,7 @@ func ParseCityList(contents []byte) engine.ParseResult {
 	for _, value := range findAll {
 		//fmt.Printf("City :%s , URL: %s \n", value[2], value[1])
 		// 城市名字
-		result.Items = append(result.Items, string(value[2]))
+		//result.Items = append(result.Items, string(value[2]))
 		// 城市url
 		result.Requests = append(result.Requests, engine.Request{
 			Url:        string(value[1]),

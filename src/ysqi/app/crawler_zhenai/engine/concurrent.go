@@ -1,9 +1,5 @@
 package engine
 
-import (
-	"log"
-)
-
 //接口
 type ReadyNotifier interface {
 	WorkerReady(chan Request)
@@ -20,6 +16,7 @@ type Scheduler interface {
 type ConcurrentEngine struct {
 	Scheduler   Scheduler //Sheduler
 	WorkerCount int       //worker的数量
+	ItemChan    chan Item
 }
 
 func (e *ConcurrentEngine) Run(seeds ...Request) {
@@ -41,13 +38,14 @@ func (e *ConcurrentEngine) Run(seeds ...Request) {
 		e.Scheduler.Submit(r)
 	}
 
-	itemCount := 0
 	//从out中获取result，对于item就打印即可，对于request，就继续分配
 	for {
 		result := <-out
 		for _, item := range result.Items {
-			log.Printf("Got %d  item : %v", itemCount, item)
-			itemCount++
+			// 存储
+			go func() {
+				e.ItemChan <- item
+			}()
 		}
 
 		for _, request := range result.Requests {
