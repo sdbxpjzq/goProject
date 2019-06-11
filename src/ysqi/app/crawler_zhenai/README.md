@@ -1,4 +1,4 @@
-珍爱网 爬虫项目
+go 爬虫项目
 
 
 
@@ -27,7 +27,4 @@ ElasticSearch的默认端口是9200，我们把宿主环境9200端口映射到Do
 
 https://gopkg.in/olivere/elastic.v6
 
-参考:
-参考:
-https://chaindesk.cn/witbook/22/495
 
